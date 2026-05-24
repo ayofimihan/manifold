@@ -113,12 +113,18 @@ export function ChatDrawer() {
   }
 
   return (
-    <Drawer isOpen={open} placement="right" onClose={() => setOpen(false)} size="md" autoFocus={false}>
+    <Drawer
+      isOpen={open}
+      placement="right"
+      onClose={() => setOpen(false)}
+      initialFocusRef={inputRef}
+    >
       <DrawerOverlay />
       <DrawerContent
         maxW={{ base: '100%', sm: '440px', lg: '480px' }}
+        width="100%"
         bg="#050607"
-        className="hairline-l flex flex-col"
+        borderLeft="1px solid #1A1F23"
       >
         <header className="h-14 px-4 hairline-b flex items-center justify-between shrink-0">
           <div className="flex items-center gap-2 min-w-0">

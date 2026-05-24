@@ -32,13 +32,13 @@ export const chakraTheme = extendTheme({
     },
     Drawer: {
       baseStyle: {
-        overlay: { background: 'rgba(0,0,0,0.4)' },
+        overlay: { background: 'rgba(0,0,0,0.4)', backdropFilter: 'none' },
         dialog: {
           background: '#050607',
+          color: '#E5E9EC',
           borderRadius: 0,
           boxShadow: '-1px 0 0 0 #1A1F23, 0 20px 40px rgba(0,0,0,0.5)',
         },
-        dialogContainer: { zIndex: 50 },
       },
     },
     Switch: {

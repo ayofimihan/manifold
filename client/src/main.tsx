@@ -20,7 +20,7 @@ const qc = new QueryClient({
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <ChakraProvider theme={chakraTheme} resetCSS={false} disableGlobalStyle>
+    <ChakraProvider theme={chakraTheme} resetCSS={false}>
       <QueryClientProvider client={qc}>
         <RouterProvider router={router} />
       </QueryClientProvider>
