@@ -2,6 +2,10 @@ import { Hono } from 'hono';
 import { cors } from 'hono/cors';
 import { serve } from '@hono/node-server';
 import { streamSSE } from 'hono/streaming';
+import { loadEnv } from './env.js';
+
+const envPath = loadEnv();
+
 import { runChat, activeProvider, type ChatRequest } from './chat.js';
 
 const app = new Hono();
@@ -31,4 +35,5 @@ const port = Number(process.env.PORT) || 8787;
 serve({ fetch: app.fetch, port });
 const provider = activeProvider();
 console.log(`[manifold] server listening on http://localhost:${port}`);
+console.log(`[manifold] env: ${envPath ?? 'no .env loaded (using process env only)'}`);
 console.log(`[manifold] provider: ${provider.id} (${provider.model})`);
