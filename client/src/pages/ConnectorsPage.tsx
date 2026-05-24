@@ -1,4 +1,5 @@
 import { CheckCircle2, CircleAlert, CircleOff, Pause, RefreshCw } from 'lucide-react';
+import { Switch } from '@chakra-ui/react';
 import { DEFAULT_CONNECTORS } from '@/data/connectors';
 import { useDashboard } from '@/store/dashboard';
 import { Card } from '@/components/Card';
@@ -120,21 +121,12 @@ function ConnectorCard({
 
 function Toggle({ on, onChange }: { on: boolean; onChange: () => void }) {
   return (
-    <button
-      role="switch"
-      aria-checked={on}
-      onClick={onChange}
-      className={cn(
-        'relative shrink-0 w-9 h-5 hairline transition-colors',
-        on ? 'bg-accent/15 border-accent/50' : 'bg-bg-inset',
-      )}
-    >
-      <span
-        className={cn(
-          'absolute top-[2px] size-3.5 transition-transform',
-          on ? 'translate-x-[18px] bg-accent' : 'translate-x-[2px] bg-text-tertiary',
-        )}
-      />
-    </button>
+    <Switch
+      isChecked={on}
+      onChange={onChange}
+      size="md"
+      aria-label="Toggle connector"
+      sx={{ '& .chakra-switch__track': { transitionProperty: 'background, border-color', transitionDuration: '150ms' } }}
+    />
   );
 }

@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react';
 import { Sparkles, X, Send, RotateCcw, Square } from 'lucide-react';
+import { Drawer, DrawerContent, DrawerOverlay } from '@chakra-ui/react';
 import { useChat } from '@/store/chat';
 import { useDashboard } from '@/store/dashboard';
 import { dealerById } from '@/data/dealers';
@@ -111,12 +112,14 @@ export function ChatDrawer() {
     ask(input);
   }
 
-  if (!open) return null;
-
   return (
-    <div className="fixed inset-0 z-50 flex justify-end pointer-events-none">
-      <div className="absolute inset-0 bg-black/40 pointer-events-auto animate-fadeIn" onClick={() => setOpen(false)} />
-      <aside className="relative pointer-events-auto w-full sm:w-[440px] lg:w-[480px] bg-bg-base hairline-l flex flex-col animate-slideIn shadow-2xl">
+    <Drawer isOpen={open} placement="right" onClose={() => setOpen(false)} size="md" autoFocus={false}>
+      <DrawerOverlay />
+      <DrawerContent
+        maxW={{ base: '100%', sm: '440px', lg: '480px' }}
+        bg="#050607"
+        className="hairline-l flex flex-col"
+      >
         <header className="h-14 px-4 hairline-b flex items-center justify-between shrink-0">
           <div className="flex items-center gap-2 min-w-0">
             <Sparkles size={14} className="text-accent" />
@@ -207,7 +210,7 @@ export function ChatDrawer() {
             <span>{Object.values(enabledConnectors).filter(Boolean).length}/7 sources</span>
           </div>
         </form>
-      </aside>
-    </div>
+      </DrawerContent>
+    </Drawer>
   );
 }
