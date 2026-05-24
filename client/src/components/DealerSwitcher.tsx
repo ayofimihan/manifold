@@ -30,10 +30,7 @@ export function DealerSwitcher() {
         )}
       >
         <span className="size-2" style={{ background: current.color }} />
-        <div className="flex flex-col items-start leading-tight">
-          <span className="text-text-primary font-medium">{current.name}</span>
-          <span className="text-2xs text-text-tertiary num">{current.metro} · {current.rooftops} rooftops</span>
-        </div>
+        <span className="text-text-primary font-medium">{current.name}</span>
         <ChevronDown size={14} className="text-text-tertiary" />
       </button>
 

@@ -25,6 +25,7 @@ export function ChatDrawer() {
   const patchLast = useChat((s) => s.patchLast);
   const setStreaming = useChat((s) => s.setStreaming);
   const reset = useChat((s) => s.reset);
+  const setProvider = useChat((s) => s.setProvider);
 
   const dealerId = useDashboard((s) => s.dealerId);
   const dealer = dealerById(dealerId);
@@ -89,6 +90,7 @@ export function ChatDrawer() {
           toolCalls.push({ tool, input });
           patchLast({ toolCalls: [...toolCalls] });
         },
+        onMeta: (id, model) => setProvider(id, model),
         onFollowUps: (qs) => patchLast({ followUps: qs }),
         onDone: () => setStreaming(false),
         onError: (err) => {
@@ -118,10 +120,7 @@ export function ChatDrawer() {
         <header className="h-14 px-4 hairline-b flex items-center justify-between shrink-0">
           <div className="flex items-center gap-2 min-w-0">
             <Sparkles size={14} className="text-accent" />
-            <div className="flex flex-col leading-tight">
-              <span className="text-md font-medium">Ask Manifold</span>
-              <span className="num text-2xs text-text-tertiary">{dealer.shortName} · context: L30D</span>
-            </div>
+            <span className="text-md font-medium">Ask Manifold</span>
           </div>
           <div className="flex items-center gap-1">
             <button

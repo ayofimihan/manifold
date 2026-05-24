@@ -1,14 +1,12 @@
 import { NavLink } from 'react-router-dom';
-import { Activity, AlertTriangle, BarChart3, LayoutDashboard, MessageSquare, Plug, Target } from 'lucide-react';
+import { AlertTriangle, LayoutDashboard, MessageSquare, Target } from 'lucide-react';
 import { cn } from '@/lib/cn';
 import { useChat } from '@/store/chat';
 
 const NAV = [
   { to: '/', label: 'Overview', icon: LayoutDashboard, end: true },
   { to: '/campaigns', label: 'Campaigns', icon: Target },
-  { to: '/kpi/cost_per_lead', label: 'KPI Explorer', icon: BarChart3 },
   { to: '/alerts', label: 'Alerts', icon: AlertTriangle },
-  { to: '/connectors', label: 'Connectors', icon: Plug },
 ];
 
 export function Sidebar() {
@@ -61,17 +59,6 @@ export function Sidebar() {
         </div>
       </nav>
 
-      <div className="px-4 py-3 hairline-t">
-        <div className="label-meta">Status</div>
-        <div className="mt-1.5 flex items-center gap-2 text-xs text-text-secondary">
-          <span className="size-1.5 bg-success animate-pulse" />
-          <span className="num">All systems</span>
-        </div>
-        <div className="mt-3 flex items-center gap-1.5 text-2xs text-text-tertiary">
-          <Activity size={10} />
-          <span className="num">v0.1.0 · build 472841f</span>
-        </div>
-      </div>
     </aside>
   );
 }

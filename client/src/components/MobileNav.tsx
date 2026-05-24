@@ -1,13 +1,11 @@
 import { NavLink } from 'react-router-dom';
-import { AlertTriangle, BarChart3, LayoutDashboard, Plug, Target, X } from 'lucide-react';
+import { AlertTriangle, LayoutDashboard, Target, X } from 'lucide-react';
 import { cn } from '@/lib/cn';
 
 const NAV = [
   { to: '/', label: 'Overview', icon: LayoutDashboard, end: true },
   { to: '/campaigns', label: 'Campaigns', icon: Target },
-  { to: '/kpi/cost_per_lead', label: 'KPI Explorer', icon: BarChart3 },
   { to: '/alerts', label: 'Alerts', icon: AlertTriangle },
-  { to: '/connectors', label: 'Connectors', icon: Plug },
 ];
 
 export function MobileNav({ open, onClose }: { open: boolean; onClose: () => void }) {

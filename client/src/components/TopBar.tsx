@@ -1,6 +1,5 @@
-import { Menu, MessageSquare, Search, Sparkles } from 'lucide-react';
+import { Menu, MessageSquare, Sparkles } from 'lucide-react';
 import { DealerSwitcher } from './DealerSwitcher';
-import { RangePicker } from './RangePicker';
 import { useChat } from '@/store/chat';
 import { useState } from 'react';
 import { MobileNav } from './MobileNav';
@@ -22,20 +21,7 @@ export function TopBar() {
 
           <DealerSwitcher />
 
-          <div className="hidden lg:flex items-center gap-2 ml-1">
-            <div className="relative">
-              <Search size={13} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-text-tertiary pointer-events-none" />
-              <input
-                placeholder="Search KPIs, campaigns, alerts…"
-                className="hairline bg-bg-surface pl-8 pr-3 h-9 text-sm w-72 focus:outline-none focus:border-border-muted placeholder:text-text-tertiary"
-              />
-              <kbd className="num text-2xs text-text-tertiary border border-border-muted px-1 py-px absolute right-2 top-1/2 -translate-y-1/2">/</kbd>
-            </div>
-          </div>
-
           <div className="flex-1" />
-
-          <RangePicker />
 
           <button
             onClick={toggle}
