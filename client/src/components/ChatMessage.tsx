@@ -59,8 +59,22 @@ function FollowUp({ text }: { text: string }) {
   );
 }
 
+function stripControlTags(text: string): string {
+  return text
+    .replace(/<follow_ups>[\s\S]*?<\/follow_ups>/g, '')
+    .replace(/<function\b[^>]*>[\s\S]*?<\/function>/g, '')
+    .replace(/<tool_call>[\s\S]*?<\/tool_call>/g, '')
+    .replace(/<\|python_tag\|>[\s\S]*?(?=$|\n)/g, '')
+    .replace(/<follow_ups\b[\s\S]*$/, '')
+    .replace(/<function\b[\s\S]*$/, '')
+    .replace(/<tool_call\b[\s\S]*$/, '')
+    .replace(/\n{3,}/g, '\n\n')
+    .replace(/[ \t]+$/gm, '');
+}
+
 function renderContent(text: string) {
-  const parts = text.split(/(\*\*[^*]+\*\*)/g);
+  const cleaned = stripControlTags(text);
+  const parts = cleaned.split(/(\*\*[^*]+\*\*)/g);
   return parts.map((p, i) => {
     if (p.startsWith('**') && p.endsWith('**')) {
       return (

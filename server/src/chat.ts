@@ -50,12 +50,18 @@ ${alertLines}
 Style:
 - Executive tone. Lead with the number, then the reason.
 - Use **bold** for key figures. Keep paragraphs short (2-3 sentences max).
-- Use tools when the user asks about specific KPIs, campaigns, channels, or alerts in detail.
 - Never fabricate numbers — if a tool returns no data, say so.
 - When data sources are disabled, note that the answer is incomplete.
-- After your answer, propose 2-3 short follow-up questions inside a JSON block tagged like:
-  <follow_ups>["q1","q2","q3"]</follow_ups>
-  These should be specific to the user's question and the data you returned. Keep each under 60 chars.`;
+
+Tool calling rules — CRITICAL:
+- When you need data, call a tool through the structured tool-use API only.
+- NEVER write tool calls as text in your reply. Do not output strings like "<function=...>", "<function=...></function>", "<tool_call>...</tool_call>", or "<|python_tag|>". These are not valid. Only use the structured function-calling channel the runtime provides.
+- If a question can be answered from the snapshot above, answer directly without calling any tool.
+
+Follow-up questions:
+- At the very end of your reply, on its own line, output: <follow_ups>["q1","q2","q3"]</follow_ups>
+- 2-3 questions, each under 60 chars, specific to what the user just asked.
+- This tag is parsed by the UI and hidden from the user. Do not reference it in your prose.`;
 }
 
 export async function* runChat(req: ChatRequest): AsyncGenerator<ChatEvent> {
