@@ -21,8 +21,14 @@ export interface StreamHandlers {
   onError?: (err: Error) => void;
 }
 
+function apiUrl(path: string): string {
+  const baseUrl = import.meta.env.VITE_API_BASE_URL?.trim();
+  if (!baseUrl) return path;
+  return new URL(path, `${baseUrl.endsWith('/') ? baseUrl : `${baseUrl}/`}`).toString();
+}
+
 export async function streamChat(req: ChatRequest, signal: AbortSignal, handlers: StreamHandlers) {
-  const res = await fetch('/api/chat', {
+  const res = await fetch(apiUrl('/api/chat'), {
     method: 'POST',
     headers: { 'content-type': 'application/json' },
     body: JSON.stringify(req),

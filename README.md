@@ -22,6 +22,37 @@ npm run dev   # server (:8787) and client (:5173) run concurrently
 
 Open http://localhost:5173.
 
+For local split-deploy testing, copy `client/.env.example` to `client/.env.local` and point `VITE_API_BASE_URL` at your API origin.
+
+## Railway (Two Services)
+
+Deploy this as two Railway services with separate root directories.
+
+### Frontend service
+
+- Root directory: `client`
+- Build command: `npm run build`
+- Start command: `npm run start`
+- Variables:
+   - `VITE_API_BASE_URL=https://<your-backend>.up.railway.app`
+
+The client now uses `VITE_API_BASE_URL` when set, and falls back to same-origin `/api` locally.
+
+### Backend service
+
+- Root directory: `server`
+- Start command: `npm run start`
+- Variables:
+   - `PORT` is provided by Railway automatically
+   - `GROQ_API_KEY` or `ANTHROPIC_API_KEY`
+   - optional: `GROQ_MODEL`, `ANTHROPIC_MODEL`
+
+### Notes
+
+- Pin Node `22.x` on Railway. The repo now declares that in `package.json` so Nixpacks picks a modern runtime.
+- CORS is already enabled on the API, so the Railway frontend can call the Railway backend directly.
+- If you do not set an API key, chat still works with the built-in mock provider.
+
 ## LLM provider fallback
 
 The chat backend picks a provider at request time with this precedence:

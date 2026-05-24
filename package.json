@@ -2,6 +2,9 @@
   "name": "manifold",
   "private": true,
   "version": "0.1.0",
+  "engines": {
+    "node": "22.x"
+  },
   "workspaces": ["client", "server"],
   "scripts": {
     "dev": "concurrently -n server,client -c cyan,green \"npm:dev:server\" \"npm:dev:client\"",
