@@ -45,10 +45,12 @@ export const TOOLS = [
 
 export function runTool(
   name: string,
-  input: Record<string, unknown>,
+  rawInput: Record<string, unknown> | null | undefined,
   dealerId: DealerId,
   enabledSources: string[],
 ): unknown {
+  const input: Record<string, unknown> =
+    rawInput && typeof rawInput === 'object' && !Array.isArray(rawInput) ? rawInput : {};
   switch (name) {
     case 'get_kpi_snapshot': {
       const kpi = String(input.kpi_id);
