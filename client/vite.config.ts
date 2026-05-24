@@ -2,10 +2,21 @@ import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import path from 'node:path';
 
-const previewAllowedHosts = ['.up.railway.app'];
+function normalizeAllowedHost(host: string | undefined): string {
+  if (!host) return '';
+  return host.trim().replace(/^[a-z]+:\/\//i, '').replace(/\/.*$/, '');
+}
 
-if (process.env.RAILWAY_PUBLIC_DOMAIN) {
-  previewAllowedHosts.push(process.env.RAILWAY_PUBLIC_DOMAIN);
+const previewAllowedHosts = new Set(
+  ['.up.railway.app', 'manifold.fimihan.dev'].map(normalizeAllowedHost).filter(Boolean),
+);
+
+for (const host of [
+  process.env.RAILWAY_PUBLIC_DOMAIN,
+  ...(process.env.PREVIEW_ALLOWED_HOSTS?.split(',') ?? []),
+]) {
+  const normalizedHost = normalizeAllowedHost(host);
+  if (normalizedHost) previewAllowedHosts.add(normalizedHost);
 }
 
 export default defineConfig({
@@ -25,6 +36,6 @@ export default defineConfig({
     },
   },
   preview: {
-    allowedHosts: previewAllowedHosts,
+    allowedHosts: [...previewAllowedHosts],
   },
 });
