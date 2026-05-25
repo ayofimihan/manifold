@@ -1,18 +1,18 @@
-import { useEffect, useRef } from 'react';
-import { Sparkles, X, Send, RotateCcw, Square } from 'lucide-react';
-import { Drawer, DrawerContent, DrawerOverlay } from '@chakra-ui/react';
-import { useChat } from '@/store/chat';
-import { useDashboard } from '@/store/dashboard';
-import { dealerById } from '@/data/dealers';
-import { makeMessage, streamChat } from '@/lib/api';
-import type { ConnectorId } from '@/types';
-import { ChatMessageView } from './ChatMessage';
+import { useEffect, useRef } from "react";
+import { Sparkles, X, Send, RotateCcw, Square } from "lucide-react";
+import { Drawer, DrawerContent, DrawerOverlay } from "@chakra-ui/react";
+import { useChat } from "@/store/chat";
+import { useDashboard } from "@/store/dashboard";
+import { dealerById } from "@/data/dealers";
+import { makeMessage, streamChat } from "@/lib/api";
+import type { ConnectorId } from "@/types";
+import { ChatMessageView } from "./ChatMessage";
 
 const SUGGESTIONS = [
-  'Why did leads drop this month?',
-  'Compare channel ROAS for the last 30 days',
-  'Which campaign should I scale up?',
-  'Summarize marketing performance',
+  "Why did leads drop this month?",
+  "Compare channel ROAS for the last 30 days",
+  "Which campaign should I scale up?",
+  "Summarize marketing performance",
 ];
 
 export function ChatDrawer() {
@@ -41,44 +41,52 @@ export function ChatDrawer() {
   }, [open]);
 
   useEffect(() => {
-    scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: 'smooth' });
+    scrollRef.current?.scrollTo({
+      top: scrollRef.current.scrollHeight,
+      behavior: "smooth",
+    });
   }, [messages]);
 
   useEffect(() => {
     function onAsk(e: Event) {
       const text = (e as CustomEvent<string>).detail;
-      if (typeof text === 'string') ask(text);
+      if (typeof text === "string") ask(text);
     }
-    window.addEventListener('chat:ask', onAsk);
-    return () => window.removeEventListener('chat:ask', onAsk);
+    window.addEventListener("chat:ask", onAsk);
+    return () => window.removeEventListener("chat:ask", onAsk);
   });
 
   function ask(text: string) {
     if (!text.trim() || streaming) return;
 
-    const userMsg = makeMessage('user', text.trim());
+    const userMsg = makeMessage("user", text.trim());
     appendMessage(userMsg);
-    setInput('');
+    setInput("");
 
-    const assistantMsg = makeMessage('assistant', '');
+    const assistantMsg = makeMessage("assistant", "");
     appendMessage(assistantMsg);
     setStreaming(true);
 
     const ctx = {
       dealerId,
-      enabledConnectors: (Object.keys(enabledConnectors) as ConnectorId[]).filter((k) => enabledConnectors[k]),
-      range: 'L30D',
+      enabledConnectors: (
+        Object.keys(enabledConnectors) as ConnectorId[]
+      ).filter((k) => enabledConnectors[k]),
+      range: "L30D",
     };
 
     const ctrl = new AbortController();
     controllerRef.current = ctrl;
 
-    let accumulator = '';
+    let accumulator = "";
     const toolCalls: { tool: string; input: Record<string, unknown> }[] = [];
 
     streamChat(
       {
-        messages: [...messages, userMsg].map(({ role, content }) => ({ role, content })),
+        messages: [...messages, userMsg].map(({ role, content }) => ({
+          role,
+          content,
+        })),
         context: ctx,
       },
       ctrl.signal,
@@ -118,15 +126,23 @@ export function ChatDrawer() {
       placement="right"
       onClose={() => setOpen(false)}
       initialFocusRef={inputRef}
+      size={{ base: "full", sm: "md" }}
     >
       <DrawerOverlay />
       <DrawerContent
-        maxW={{ base: '100%', sm: '440px', lg: '480px' }}
+        maxW={{ base: "100%", sm: "440px", lg: "480px" }}
         width="100%"
+        height={{ base: "100dvh", sm: "100vh" }}
         bg="#050607"
-        borderLeft="1px solid #1A1F23"
+        sx={{ borderLeft: { base: "none", sm: "1px solid #1A1F23" } }}
       >
-        <header className="h-14 px-4 hairline-b flex items-center justify-between shrink-0">
+        <header
+          className="px-4 sm:px-4 hairline-b flex items-center justify-between shrink-0"
+          style={{
+            paddingTop: "env(safe-area-inset-top)",
+            minHeight: "3.5rem",
+          }}
+        >
           <div className="flex items-center gap-2 min-w-0">
             <Sparkles size={14} className="text-accent" />
             <span className="text-md font-medium">Ask Manifold</span>
@@ -134,29 +150,37 @@ export function ChatDrawer() {
           <div className="flex items-center gap-1">
             <button
               onClick={reset}
-              className="p-1.5 text-text-tertiary hover:text-text-secondary"
+              className="p-2 sm:p-1.5 text-text-tertiary hover:text-text-secondary -mr-1"
               aria-label="Reset conversation"
               title="Reset"
             >
-              <RotateCcw size={14} />
+              <RotateCcw size={16} />
             </button>
             <button
               onClick={() => setOpen(false)}
-              className="p-1.5 text-text-tertiary hover:text-text-secondary"
+              className="p-2 sm:p-1.5 text-text-tertiary hover:text-text-secondary -mr-1"
               aria-label="Close"
             >
-              <X size={16} />
+              <X size={18} />
             </button>
           </div>
         </header>
 
-        <div ref={scrollRef} className="flex-1 overflow-y-auto px-4 py-4 space-y-5">
+        <div
+          ref={scrollRef}
+          className="flex-1 overflow-y-auto px-4 py-4 space-y-5"
+        >
           {messages.length === 0 ? (
             <div className="space-y-4">
               <div className="space-y-1">
-                <h3 className="text-md text-text-primary font-medium">Hi. What do you want to know?</h3>
+                <h3 className="text-md text-text-primary font-medium">
+                  Hi. What do you want to know?
+                </h3>
                 <p className="text-xs text-text-tertiary leading-relaxed">
-                  Context is scoped to <span className="text-text-secondary">{dealer.name}</span>. Toggle data sources on the Connectors page to change what's available.
+                  Context is scoped to{" "}
+                  <span className="text-text-secondary">{dealer.name}</span>.
+                  Toggle data sources on the Connectors page to change what's
+                  available.
                 </p>
               </div>
               <div className="flex flex-col gap-1.5">
@@ -164,7 +188,7 @@ export function ChatDrawer() {
                   <button
                     key={q}
                     onClick={() => ask(q)}
-                    className="hairline px-3 py-2 text-left text-sm text-text-secondary hover:text-text-primary hover:border-accent/40 hover:bg-bg-raised transition-colors"
+                    className="hairline px-3 py-3 sm:py-2 text-left text-sm text-text-secondary hover:text-text-primary hover:border-accent/40 hover:bg-bg-raised active:bg-bg-raised transition-colors"
                   >
                     {q}
                   </button>
@@ -176,44 +200,53 @@ export function ChatDrawer() {
           )}
         </div>
 
-        <form onSubmit={handleSubmit} className="hairline-t p-3 shrink-0 bg-bg-surface/60">
+        <form
+          onSubmit={handleSubmit}
+          className="hairline-t p-3 shrink-0 bg-bg-surface/60"
+          style={{ paddingBottom: "max(0.75rem, env(safe-area-inset-bottom))" }}
+        >
           <div className="hairline focus-within:border-border-muted bg-bg-base flex items-end">
             <textarea
               ref={inputRef}
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={(e) => {
-                if (e.key === 'Enter' && !e.shiftKey) {
+                if (e.key === "Enter" && !e.shiftKey) {
                   e.preventDefault();
                   handleSubmit();
                 }
               }}
               rows={1}
               placeholder="Ask about KPIs, campaigns, alerts…"
-              className="flex-1 bg-transparent px-3 py-2.5 text-sm resize-none outline-none placeholder:text-text-tertiary max-h-32"
+              className="flex-1 bg-transparent px-3 py-2.5 text-base sm:text-sm resize-none outline-none placeholder:text-text-tertiary max-h-32 min-h-[42px] sm:min-h-0"
               disabled={streaming}
             />
             {streaming ? (
               <button
                 type="button"
                 onClick={stop}
-                className="m-1.5 px-2.5 h-7 bg-bg-raised hairline text-text-secondary text-xs flex items-center gap-1.5 hover:text-danger hover:border-danger/40"
+                className="m-1.5 px-3 h-9 sm:h-7 bg-bg-raised hairline text-text-secondary text-xs flex items-center gap-1.5 hover:text-danger hover:border-danger/40"
               >
-                <Square size={11} fill="currentColor" /> Stop
+                <Square size={12} fill="currentColor" />{" "}
+                <span className="hidden sm:inline">Stop</span>
               </button>
             ) : (
               <button
                 type="submit"
                 disabled={!input.trim()}
-                className="m-1.5 px-2.5 h-7 bg-accent text-bg-base text-xs font-medium flex items-center gap-1.5 disabled:opacity-40 disabled:cursor-not-allowed hover:bg-accent-hover"
+                className="m-1.5 px-3 h-9 sm:h-7 bg-accent text-bg-base text-xs font-medium flex items-center gap-1.5 disabled:opacity-40 disabled:cursor-not-allowed hover:bg-accent-hover"
               >
-                <Send size={11} /> Send
+                <Send size={12} />{" "}
+                <span className="hidden sm:inline">Send</span>
               </button>
             )}
           </div>
-          <div className="flex items-center justify-between mt-2 num text-2xs text-text-muted">
+          <div className="hidden sm:flex items-center justify-between mt-2 num text-2xs text-text-muted">
             <span>Enter to send · Shift+Enter for newline</span>
-            <span>{Object.values(enabledConnectors).filter(Boolean).length}/7 sources</span>
+            <span>
+              {Object.values(enabledConnectors).filter(Boolean).length}/7
+              sources
+            </span>
           </div>
         </form>
       </DrawerContent>
