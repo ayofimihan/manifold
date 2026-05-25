@@ -1,19 +1,24 @@
-import { defineConfig } from 'vite';
-import react from '@vitejs/plugin-react';
-import path from 'node:path';
+import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react";
+import path from "node:path";
 
 function normalizeAllowedHost(host: string | undefined): string {
-  if (!host) return '';
-  return host.trim().replace(/^[a-z]+:\/\//i, '').replace(/\/.*$/, '');
+  if (!host) return "";
+  return host
+    .trim()
+    .replace(/^[a-z]+:\/\//i, "")
+    .replace(/\/.*$/, "");
 }
 
 const previewAllowedHosts = new Set(
-  ['.up.railway.app', 'manifold.fimihan.dev'].map(normalizeAllowedHost).filter(Boolean),
+  [".up.railway.app", "manifold.fimihan.dev"]
+    .map(normalizeAllowedHost)
+    .filter(Boolean),
 );
 
 for (const host of [
   process.env.RAILWAY_PUBLIC_DOMAIN,
-  ...(process.env.PREVIEW_ALLOWED_HOSTS?.split(',') ?? []),
+  ...(process.env.PREVIEW_ALLOWED_HOSTS?.split(",") ?? []),
 ]) {
   const normalizedHost = normalizeAllowedHost(host);
   if (normalizedHost) previewAllowedHosts.add(normalizedHost);
@@ -23,14 +28,21 @@ export default defineConfig({
   plugins: [react()],
   resolve: {
     alias: {
-      '@': path.resolve(__dirname, './src'),
+      "@": path.resolve(__dirname, "./src"),
     },
   },
   server: {
     port: 5173,
+    allowedHosts: [
+      ".ngrok-free.app",
+      ".ngrok.app",
+      ".ngrok.io",
+      ".trycloudflare.com",
+      "localhost",
+    ],
     proxy: {
-      '/api': {
-        target: 'http://localhost:8787',
+      "/api": {
+        target: "http://localhost:8787",
         changeOrigin: true,
       },
     },

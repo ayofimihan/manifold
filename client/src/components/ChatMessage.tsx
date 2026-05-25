@@ -14,19 +14,19 @@ export function ChatMessageView({ msg }: { msg: ChatMsg }) {
       >
         {isUser ? <User size={13} /> : <Sparkles size={13} />}
       </div>
-      <div className={cn('flex-1 min-w-0 space-y-2', isUser && 'text-right')}>
+      <div className={cn('flex-1 min-w-0 max-w-full space-y-2', isUser && 'text-right')}>
         {msg.toolCalls && msg.toolCalls.length > 0 && (
           <div className="flex flex-wrap gap-1">
             {msg.toolCalls.map((t, i) => (
-              <span key={i} className="chip text-text-tertiary border-border-subtle">
-                <Wrench size={9} /> {t.tool}
+              <span key={i} className="chip text-text-tertiary border-border-subtle max-w-full truncate">
+                <Wrench size={9} className="shrink-0" /> {t.tool}
               </span>
             ))}
           </div>
         )}
         <div
           className={cn(
-            'text-sm leading-relaxed whitespace-pre-wrap',
+            'text-sm leading-relaxed whitespace-pre-wrap break-words',
             isUser ? 'text-text-primary' : 'text-text-secondary',
           )}
         >
@@ -52,7 +52,8 @@ function FollowUp({ text }: { text: string }) {
         const ev = new CustomEvent('chat:ask', { detail: text });
         window.dispatchEvent(ev);
       }}
-      className="chip text-text-secondary border-border-subtle hover:border-accent/40 hover:text-accent"
+      className="chip text-text-secondary border-border-subtle hover:border-accent/40 hover:text-accent max-w-full text-left"
+      style={{ wordBreak: 'break-word' }}
     >
       {text}
     </button>

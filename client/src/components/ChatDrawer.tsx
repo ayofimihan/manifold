@@ -1,6 +1,5 @@
 import { useEffect, useRef } from "react";
 import { Sparkles, X, Send, RotateCcw, Square } from "lucide-react";
-import { Drawer, DrawerContent, DrawerOverlay } from "@chakra-ui/react";
 import { useChat } from "@/store/chat";
 import { useDashboard } from "@/store/dashboard";
 import { dealerById } from "@/data/dealers";
@@ -39,6 +38,20 @@ export function ChatDrawer() {
   useEffect(() => {
     if (open) inputRef.current?.focus();
   }, [open]);
+
+  useEffect(() => {
+    if (!open) return;
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    function onKey(e: KeyboardEvent) {
+      if (e.key === 'Escape') setOpen(false);
+    }
+    document.addEventListener('keydown', onKey);
+    return () => {
+      document.body.style.overflow = prev;
+      document.removeEventListener('keydown', onKey);
+    };
+  }, [open, setOpen]);
 
   useEffect(() => {
     scrollRef.current?.scrollTo({
@@ -120,26 +133,33 @@ export function ChatDrawer() {
     ask(input);
   }
 
+  if (!open) return null;
+
   return (
-    <Drawer
-      isOpen={open}
-      placement="right"
-      onClose={() => setOpen(false)}
-      initialFocusRef={inputRef}
-      size={{ base: "full", sm: "md" }}
+    <div
+      role="dialog"
+      aria-modal="true"
+      aria-label="Ask Manifold"
+      className="fixed inset-0 z-[60] flex sm:justify-end"
     >
-      <DrawerOverlay />
-      <DrawerContent
-        maxW={{ base: "100%", sm: "440px", lg: "480px" }}
-        width="100%"
-        height={{ base: "100dvh", sm: "100vh" }}
-        bg="#050607"
-        sx={{ borderLeft: { base: "none", sm: "1px solid #1A1F23" } }}
+      <button
+        type="button"
+        onClick={() => setOpen(false)}
+        aria-label="Close chat"
+        className="absolute inset-0 bg-black/45 animate-fadeIn cursor-default"
+      />
+      <aside
+        className="relative flex flex-col bg-bg-base shadow-2xl animate-slideIn w-full sm:w-[440px] lg:w-[480px] sm:hairline-l overflow-hidden"
+        style={{
+          height: "100dvh",
+          maxHeight: "100dvh",
+          overscrollBehavior: "contain",
+        }}
       >
         <header
-          className="px-4 sm:px-4 hairline-b flex items-center justify-between shrink-0"
+          className="px-4 hairline-b flex items-center justify-between shrink-0"
           style={{
-            paddingTop: "env(safe-area-inset-top)",
+            paddingTop: "max(0px, env(safe-area-inset-top))",
             minHeight: "3.5rem",
           }}
         >
@@ -168,7 +188,7 @@ export function ChatDrawer() {
 
         <div
           ref={scrollRef}
-          className="flex-1 overflow-y-auto px-4 py-4 space-y-5"
+          className="flex-1 overflow-y-auto overflow-x-hidden px-4 py-4 space-y-5"
         >
           {messages.length === 0 ? (
             <div className="space-y-4">
@@ -218,7 +238,7 @@ export function ChatDrawer() {
               }}
               rows={1}
               placeholder="Ask about KPIs, campaigns, alerts…"
-              className="flex-1 bg-transparent px-3 py-2.5 text-base sm:text-sm resize-none outline-none placeholder:text-text-tertiary max-h-32 min-h-[42px] sm:min-h-0"
+              className="flex-1 bg-transparent px-3 py-2.5 text-[16px] sm:text-sm resize-none outline-none placeholder:text-text-tertiary max-h-32 min-h-[42px] sm:min-h-0"
               disabled={streaming}
             />
             {streaming ? (
@@ -249,7 +269,7 @@ export function ChatDrawer() {
             </span>
           </div>
         </form>
-      </DrawerContent>
-    </Drawer>
+      </aside>
+    </div>
   );
 }

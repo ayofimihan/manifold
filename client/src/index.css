@@ -6,7 +6,11 @@
 @tailwind utilities;
 
 @layer base {
-  html { font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11'; }
+  html {
+    font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+    overflow-x: hidden;
+    -webkit-text-size-adjust: 100%;
+  }
   body {
     font-family: 'Inter', system-ui, sans-serif;
     -webkit-font-smoothing: antialiased;
@@ -18,6 +22,9 @@
       radial-gradient(900px 500px at 100% 100%, rgba(59,130,246,0.03), transparent 60%),
       #050607;
     min-height: 100vh;
+    overflow-x: hidden;
+    width: 100%;
+    max-width: 100vw;
   }
   ::selection { background: rgba(45,212,191,0.35); color: #fff; }
   * { -webkit-tap-highlight-color: transparent; }
@@ -29,6 +36,14 @@
   ::-webkit-scrollbar-track { background: transparent; }
   ::-webkit-scrollbar-thumb { background: #1A1F23; }
   ::-webkit-scrollbar-thumb:hover { background: #252B30; }
+
+  @media (max-width: 640px) {
+    input:not([type="checkbox"]):not([type="radio"]),
+    textarea,
+    select {
+      font-size: 16px;
+    }
+  }
 }
 
 @layer components {
